@@ -8,8 +8,8 @@ import { Student } from '../student/student.model';
 @Component({
   selector: 'app-create-student',
   imports: [FormsModule, CommonModule],
-  templateUrl: './create-student.html',
-  styleUrl: './create-student.css',
+  templateUrl: './create-student.component.html',
+  styleUrl: './create-student.component.css',
 })
 export class CreateStudentComponent {
  student: Omit<Student, 'id'> = {
@@ -35,7 +35,7 @@ export class CreateStudentComponent {
       this.student.courses.push(course);
     } 
     else{
-      const index=this.student.courses.indexOf(course);
+      const index = this.student.courses.indexOf(course);
       if (index> -1) {
         this.student.courses.splice(index, 1);
       }
