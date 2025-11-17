@@ -7,8 +7,8 @@ import { StudentService } from '../student/student.service';
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './home.html',
-  styleUrl: './home.css',
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css',
 })
 export class HomeComponent {
   students: Student[] = [];
