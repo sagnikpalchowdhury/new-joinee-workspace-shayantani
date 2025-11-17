@@ -1,0 +1,33 @@
+<h2>Student Home Dashboard</h2>
+<p>Total Students: {{ students.length }}</p>
+
+@if (students.length > 0) {
+  <table class="student-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Date of Birth</th>
+        <th>Gender</th>
+        <th>Country</th>
+        <th>Courses Enrolled</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (student of students; track student.id) {
+        <tr>
+            <td>{{ student.id }}</td>
+            <td>{{ student.name | titlecase }}</td>
+            <td>{{ student.email }}</td>
+            <td>{{ student.dateOfBirth }}</td>
+            <td>{{ student.gender }}</td>
+            <td>{{ student.country }}</td>
+            <td>{{ student.courses }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+} @else {
+  <p>No students registered yet. Go to the "Create Student" tab to add student</p>
+}
