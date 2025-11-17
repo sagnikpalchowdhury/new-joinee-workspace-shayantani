@@ -34,6 +34,12 @@ export class CreateStudentComponent {
     if (isChecked) {
       this.student.courses.push(course);
     } 
+    else{
+      const index=this.student.courses.indexOf(course);
+      if (index> -1) {
+        this.student.courses.splice(index, 1);
+      }
+    }
   }
 
   onSubmit(formValue: any): void {
