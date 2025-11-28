@@ -5,5 +5,5 @@ export interface Student {
   dateOfBirth: string;
   gender: 'Male' | 'Female' | '' ;
   country: string;
-  courses: string[];
+  courses: string[]
 }

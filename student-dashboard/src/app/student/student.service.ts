@@ -1,34 +1,69 @@
 import { Injectable } from '@angular/core';
 import { Student } from './student.model';
+import { StorageService } from '../storage.service';
+import { Observable, of, map, switchMap, iif } from 'rxjs'; 
+
+const STORAGE_KEY = 'student_records';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentService {
-  private students: Student[] = [
-    {id: 100, name: 'Tom', email: 'abc@gmail.com', dateOfBirth: '2000-01-01', gender: 'Male', country: 'India', courses: ['Angular', 'Bootstrap']},
-    {id: 101, name:'Jack', email: 'def@gmail.com', dateOfBirth: '2000-02-01', gender: 'Male', country: 'US', courses: ['Angular']}
+  private initialStudents: Student[] = [
+    {id: 100, name: 'Tom', email: 'abc@gmail.com', dateOfBirth: '2000-01-01', gender: 'Male', country: 'India', courses: ['Physics', 'Maths', 'Computer']},
+    {id: 101, name:'Jack', email: 'def@gmail.com', dateOfBirth: '2000-02-01', gender: 'Male', country: 'USA', courses: ['Calculus', 'English','Drama']}
   ];
 
-  constructor(){}
 
-  get Students(): Student[]{
-    return this.students;
+  constructor(private storageService: StorageService){}
+
+  private saveStudents(students: Student[]): Observable<void> {
+    return this.storageService.set(STORAGE_KEY, students);
+  }
+  
+  private initializeStudentsAndReturn(): Observable<Student[]> {
+    return this.saveStudents(this.initialStudents).pipe(
+      map(() => this.initialStudents)
+    );
   }
 
-  addStudent(newStudent: Omit<Student, 'id'>): void {
-    const newId = this.students.length > 0? Math.max(...this.students.map(s=> s.id)) + 1: 100;
+  getStudents(): Observable<Student[]> {
+    return this.storageService.get<Student[]>(STORAGE_KEY).pipe(
+      switchMap(savedStudents => iif(
+        () => savedStudents === null, 
+        this.initializeStudentsAndReturn(),
+        of(savedStudents as Student[]) 
+      ))
+    );
+  }
 
-    const studenttoAdd: Student = {
-      id:newId,
-      name: newStudent.name,
-      email: newStudent.email,
-      dateOfBirth: newStudent.dateOfBirth,
-      gender: newStudent.gender,
-      country: newStudent.country,
-      courses: newStudent.courses
-    };
+  addStudent(newStudent: Omit<Student, 'id'>): Observable<void> {
+    return this.getStudents().pipe(
+      switchMap(currentStudents => {
+        const newId = currentStudents.length > 0 ? Math.max(...currentStudents.map(s => s.id)) + 1 : 100;
 
-    this.students.push(studenttoAdd);
+        const studentToAdd: Student = {
+          id: newId,
+          name: newStudent.name,
+          email: newStudent.email,
+          dateOfBirth: newStudent.dateOfBirth,
+          gender: newStudent.gender,
+          country: newStudent.country,
+          courses: newStudent.courses
+        };
+
+        const updatedStudents = [...currentStudents, studentToAdd];
+        return this.saveStudents(updatedStudents);
+      })
+    );
+  }
+
+  deleteStudent(idToDelete: number): Observable<void> {
+    return this.getStudents().pipe(
+      switchMap(currentStudents => {
+        const remainingStudents = currentStudents.filter(student => student.id !== idToDelete);
+        return this.saveStudents(remainingStudents);
+      })
+    );
   }
 }

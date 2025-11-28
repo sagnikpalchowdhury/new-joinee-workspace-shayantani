@@ -1,82 +1,75 @@
 <h2>Create Student</h2>
-    <form #studentForm="ngForm" (ngSubmit)="onSubmit(studentForm.value)">
-    <div class="form-group">
-        <label for="name" class="heading">Name</label>
-        <input type="text" id="name" name="name" [(ngModel)]="student.name" required #name="ngModel">
+<form #studentForm="ngForm" (ngSubmit)="onSubmit(studentForm.value)">
         
+    <label class="heading">Name</label>
+    <mat-form-field appearance="outline" class="full-width-input">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" id="name" name="name" [(ngModel)]="student.name" required #name="ngModel" autocomplete="name">
         @if (name.invalid && (name.dirty || name.touched)) {
-            <div class="error">Name is required.</div>
+            <mat-error>Name is required.</mat-error>
         }
-    </div>
+    </mat-form-field>
 
-    <div class="form-group">
-        <label for="email" class="heading">Email</label>
-        <input type="email" id="email" name="email" [(ngModel)]="student.email" required email #email="ngModel">
-        
+    <label class="heading">Email</label>
+    <mat-form-field appearance="outline" class="full-width-input">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" id="email" name="email" [(ngModel)]="student.email" required email #email="ngModel" autocomplete="email">
         @if (email.invalid && (email.dirty || email.touched)) {
-            <div class="error">Email is required.</div>
+            <mat-error>Email is required.</mat-error>
         }
-    </div>
+    </mat-form-field>
 
-    <div class="form-group">
-    <label for="dob" class="heading">Date of Birth</label>
-    <input type="date" id="dob" name="dateOfBirth" [(ngModel)]="student.dateOfBirth" required #dobField="ngModel">
-    @if (dobField.invalid && (dobField.dirty || dobField.touched)) {
-        <div class="error">Date of Birth is required.</div>
-    }
-    </div>
+    <label class="heading">Date of Birth</label>
+    <mat-form-field appearance="outline" class="full-width-input">
+        <mat-label>Date of Birth</mat-label>
+        <input matInput [matDatepicker]="picker" id="dob" name="dateOfBirth" [(ngModel)]="student.dateOfBirth" required #dobField="ngModel">
 
-    <div class="form-group">
-    <label class="heading">Gender</label>
-    <div class="radio-group">
-        <label class="radio-input">
-            <input type="radio" value="Male" name="gender" [(ngModel)]="student.gender" required> Male
-        </label>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker #picker></mat-datepicker>
         
-        <label class="radio-input">
-            <input type="radio" value="Female" name="gender" [(ngModel)]="student.gender" required> Female
-        </label>
-    </div>
-    
-    @if (student.gender === '' && studentForm.submitted) {
-        <div class="error">Gender is required.</div>
-    }
+        @if (dobField.invalid && (dobField.dirty || dobField.touched)) {
+            <mat-error>Date of Birth is required.</mat-error>
+        }
+    </mat-form-field>
+
+    <div class="form__input">
+        <label class="heading">Gender</label>
+        <mat-radio-group name="gender" [(ngModel)]="student.gender" required class="radio-group">
+            <mat-radio-button value="Male">Male</mat-radio-button>
+            <mat-radio-button value="Female">Female</mat-radio-button>
+        </mat-radio-group>
+        @if (student.gender === '' && studentForm.submitted) {
+            <div class="error-text">Gender is required.</div>
+        }
     </div>
 
-    <div class="form-group">
-        <label for="country" class="heading">Country</label>
-        <select id="country" name="country" [(ngModel)]="student.country" required #countryField="ngModel">
-        <option [ngValue]="''" disabled>Select Country</option>
-        @for (country of countries; track country) {
-            <option [value]="country">{{ country }}</option>
-        }
-        </select>
+    <label class="heading">Country</label>
+    <mat-form-field appearance="outline" class="full-width-input">
+        <mat-label>Country</mat-label>
+        <mat-select id="country" name="country" [(ngModel)]="student.country" required #countryField="ngModel">
+            <mat-option [value]="''" disabled>Select Country</mat-option>
+            @for (country of countries; track country) {
+                <mat-option [value]="country">{{ country }}</mat-option>
+            }
+        </mat-select>
         @if (countryField.invalid && (countryField.dirty || countryField.touched)) {
-            <div class="error">Country is required.</div>
+            <mat-error>Country is required.</mat-error>
         }
-    </div>
+    </mat-form-field>
 
-    <div class="form-group">
-    <label class="heading">Courses to Enroll</label>
-    <div class="checkbox-group">
-        @for (course of courses; track course) {
-        <label>
-            <input 
-            type="checkbox" 
-            [value]="course" 
-            required
-            name="course" 
-            [checked]="student.courses.includes(course)"
-            (change)="onCourseChange(course, $event.target.checked)"> 
-            {{ course }}
-        </label>
-        }
-    </div>
-  
-    @if (student.courses.length === 0 && studentForm.submitted) {
-        <div class="error">At least one course must be selected.</div>
+    @if (student.country) {
+        <course-selection
+            [selectedCountry]="student.country"
+            [submitted]="studentForm.submitted"
+            (coursesChange)="onCoursesChanged($event)"
+            (isValidChange)="onValidationChanged($event)">
+        </course-selection>
     }
-    </div>
 
-    <button type="submit" [disabled]="studentForm.invalid || student.courses.length === 0">Submit</button>
-  </form>
+    <button 
+        mat-raised-button type="submit" class="button__submit"
+        [disabled]="isSaving() || studentForm.invalid || !isCourseSelectionValid" >
+        Submit
+    </button>
+</form>
