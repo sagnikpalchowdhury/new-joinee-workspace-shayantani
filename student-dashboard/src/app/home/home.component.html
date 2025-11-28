@@ -1,33 +1,70 @@
 <h2>Student Home Dashboard</h2>
+
 <p>Total Students: {{ students.length }}</p>
 
-@if (students.length > 0) {
-  <table class="student-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Date of Birth</th>
-        <th>Gender</th>
-        <th>Country</th>
-        <th>Courses Enrolled</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (student of students; track student.id) {
-        <tr>
-            <td>{{ student.id }}</td>
-            <td>{{ student.name | titlecase }}</td>
-            <td>{{ student.email }}</td>
-            <td>{{ student.dateOfBirth }}</td>
-            <td>{{ student.gender }}</td>
-            <td>{{ student.country }}</td>
-            <td>{{ student.courses }}</td>
-        </tr>
-      }
-    </tbody>
-  </table>
-} @else {
-  <p>No students registered yet. Go to the "Create Student" tab to add student</p>
-}
+<div class="table-responsive">
+    
+    <table mat-table [dataSource]="students" class="student-table-mat">
+
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> ID </th>
+            <td mat-cell *matCellDef="let student"> {{ student.id }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let student"> {{ student.name | titlecase }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef> Email </th>
+            <td mat-cell *matCellDef="let student"> {{ student.email }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dateOfBirth">
+            <th mat-header-cell *matHeaderCellDef> Date of Birth </th>
+            <td mat-cell *matCellDef="let student"> {{ student.dateOfBirth | date: 'longDate'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="gender">
+            <th mat-header-cell *matHeaderCellDef> Gender </th>
+            <td mat-cell *matCellDef="let student"> {{ student.gender }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+            <th mat-header-cell *matHeaderCellDef> Country </th>
+            <td mat-cell *matCellDef="let student"> {{ student.country }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="courses">
+            <th mat-header-cell *matHeaderCellDef> Courses Enrolled</th>
+            <td mat-cell *matCellDef="let student"> {{ student.courses }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef> Delete </th>
+            <td mat-cell *matCellDef="let student">
+                <button mat-icon-button color="warn" (click)="onDeleteStudent(student.id)" [disabled]="isLoading()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        @if (!isLoading()) {
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        }
+    </table>
+
+    @if (isLoading()) {
+        <div class="container__loader">
+            <mat-spinner diameter="50"></mat-spinner>
+            <p>Loading...</p>
+        </div>
+    }
+    
+    @if (students.length === 0 && !isLoading()) { 
+        <p>No students registered yet. Go to the "Create Student" tab to add student</p>
+    }
+</div>

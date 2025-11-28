@@ -5,5 +5,5 @@ import { CreateStudentComponent } from './create-student/create-student.componen
 export const routes: Routes = [
     {path: 'home', component: HomeComponent},
     {path: 'create-student', component: CreateStudentComponent},
-    { path: '', redirectTo: '/home', pathMatch: 'full' }
+    { path: '', redirectTo: '/home', pathMatch: 'full'}
 ];
