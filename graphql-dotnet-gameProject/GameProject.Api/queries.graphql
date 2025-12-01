@@ -1,0 +1,122 @@
+fragment gameDetails on Game {
+  title
+  platform
+}
+
+query GameQueryWithFragment($id: String!) {
+  game(id: $id) {
+    id
+    ...gameDetails
+    reviews {
+      rating
+    }
+  }
+}
+
+
+
+
+
+fragment reviewDetails on Review {
+  rating
+  content
+  game {
+    ...gameDetails
+  }
+  author {
+    name
+  }
+}
+
+query ReviewQueryWithNestedFragment($id: String!) {
+  review(id: $id) {
+    id
+    ...reviewDetails
+  }
+}
+
+
+
+
+
+
+
+mutation AddMutation($game: AddGameInput!){
+  addGame(game: $game) {
+    id,
+    title,
+    platform
+  }
+}
+
+#variable
+{
+  "game":{
+    "title": "a new game",
+    "platform": ["switch", "ps5"]
+  }
+}
+
+
+
+
+mutation EditMutation($edits: EditGameInput!, $id: String!){
+  updateGame(edits: $edits, id: $id) {
+    title
+    platform
+  }
+}
+
+mutation EditMutation($edits: EditGameInput!, $id: String!){
+  updateGame(edits: $edits, id: $id) {
+    title
+    platform
+  }
+}
+
+
+
+
+
+mutation DeleteMutation($id: String!){
+  deleteGame(id: $id) {
+    id,
+    title,
+    platform
+  }
+}
+
+query ReviewQuery($id: String!){
+  review(id: $id){
+    rating
+    game {
+      title
+      platform
+      reviews {
+        rating
+      }
+    }
+  }
+}
+
+query ReviewQuery($id: String!) {
+  author(id: $id){
+    name
+    reviews {
+      rating
+      content
+    }
+  }
+}
+
+query ReviewQuery{
+  reviews {
+    id
+    rating
+  }
+}
+
+#variable
+{
+  "id":"2"
+}
