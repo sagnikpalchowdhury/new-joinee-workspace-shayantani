@@ -42,3 +42,14 @@ __screenshots__/
 # System files
 **/.DS_Store
 Thumbs.db
+
+
+# Xcode
+**/build/
+**DerivedData/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+**xcuserdata/
+
+# Logs
+*.log
