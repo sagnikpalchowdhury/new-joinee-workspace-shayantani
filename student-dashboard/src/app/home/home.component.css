@@ -1,14 +1,19 @@
-.student-table { 
-    width: 100%; 
-    border-collapse: collapse; 
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.student-table th, .student-table td { 
-    border: 1px solid #ccc; 
-    padding: 8px; 
-    text-align: left; 
-}
-
-.student-table th { 
-    background-color: #f2f2f2; 
+.container__loader{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(122, 120, 120, 0.5); 
+  display: flex;
+  justify-content: center;
 }

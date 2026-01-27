@@ -1,0 +1,12 @@
+.heading{
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.1em;
+}
+
+.container--course-selection{
+    box-sizing: border-box;
+    padding: 0.5em;
+    border: 1px solid;
+    border-radius: 0.2em;
+}

@@ -1,0 +1,46 @@
+<label class="heading">Courses to Enroll</label>
+<div class="container--course-selection">
+    @if (currentCourseConfig) {
+        <div class="form__input">
+            <label class="heading">Mandatory Courses (Select exactly {{ currentCourseConfig.mandatoryCount }})</label>
+            <div class="checkbox-group-mat">
+                @for (course of currentCourseConfig.mandatory; track course) {
+                    <mat-checkbox 
+                        [checked]="selectedCourses.mandatory.includes(course)"
+                        (change)="onCourseChange(course, 'mandatory', $event.checked)"
+                        [disabled]="selectedCourses.mandatory.length >= currentCourseConfig.mandatoryCount && 
+                                    !selectedCourses.mandatory.includes(course)">
+                        {{ course }}
+                    </mat-checkbox>
+                }
+            </div>
+            @if (selectedCourses.mandatory.length !== currentCourseConfig.mandatoryCount && submitted) {
+                <div class="error-text">
+                    You must select exactly {{ currentCourseConfig.mandatoryCount }} mandatory course(s). 
+                    (Selected: {{ selectedCourses.mandatory.length }})
+                </div>
+            }
+        </div>
+
+        <div class="form__input">
+            <label class="heading">Elective Courses (Select exactly {{ currentCourseConfig.electivesCount }})</label>
+            <div class="checkbox-group-mat">
+                @for (course of currentCourseConfig.electives; track course) {
+                    <mat-checkbox 
+                        [checked]="selectedCourses.electives.includes(course)"
+                        (change)="onCourseChange(course, 'electives', $event.checked)"
+                        [disabled]="selectedCourses.electives.length >= currentCourseConfig.electivesCount && 
+                                    !selectedCourses.electives.includes(course)">
+                        {{ course }}
+                    </mat-checkbox>
+                }
+            </div> 
+            @if (selectedCourses.electives.length !== currentCourseConfig.electivesCount && submitted) {
+                <div class="error-text">
+                    You must select exactly {{ currentCourseConfig.electivesCount }} elective course(s). 
+                    (Selected: {{ selectedCourses.electives.length }})
+                </div>
+            }
+        </div>
+    }
+</div>
