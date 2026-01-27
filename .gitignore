@@ -44,6 +44,16 @@ __screenshots__/
 **/.DS_Store
 Thumbs.db
 
+
+# Xcode
+**/build/
+**DerivedData/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+**xcuserdata/
+
+# Logs
+*.log
 #.NET Files
 **/bin
 **/obj
